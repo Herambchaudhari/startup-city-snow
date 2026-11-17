@@ -1,12 +1,14 @@
 #!/bin/bash
 # Startup City Snow: the one-line install (no App Store, no security warning):
-#   curl -fsSL https://raw.githubusercontent.com/OWNER/startup-city-snow/main/install.sh | bash
-# Downloads the latest release, puts the app in Applications and opens it. Files fetched by curl aren't quarantined,
+#   curl -fsSL https://raw.githubusercontent.com/Herambchaudhari/startup-city-snow/main/install.sh | bash
+# Downloads the release (checks its fingerprint), puts the app in Applications and opens it. Files fetched by curl aren't quarantined,
 # so macOS opens the app without the "can't be opened" warning a browser download gets (the app isn't notarized yet).
 # Uninstall: pkill -x StartupCitySnow; rm -rf "/Applications/Startup City Snow.app"
 set -euo pipefail
-REPO="${SNOW_REPO:-OWNER/startup-city-snow}"
-URL="${SNOW_URL:-https://github.com/$REPO/releases/latest/download/StartupCitySnow.zip}"
+REPO="${SNOW_REPO:-Herambchaudhari/startup-city-snow}"
+URL="${SNOW_URL:-https://github.com/$REPO/releases/download/v1.0/StartupCitySnow.zip}"
+# the download's fingerprint: if the file was damaged or swapped, nothing is installed (update it with each release)
+SHA256="6616425b5bd25feb4fce1453c619649cba23fbb9a51dd24cd5ee6856ccbba660"
 NAME="Startup City Snow"
 
 [ "$(uname)" = "Darwin" ] || { echo "Startup City Snow is a Mac app."; exit 1; }
@@ -15,6 +17,7 @@ NAME="Startup City Snow"
 echo "❄  Downloading Startup City Snow (about 180 MB)…"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 curl -fL --progress-bar "$URL" -o "$TMP/snow.zip"
+[ "$(shasum -a 256 "$TMP/snow.zip" | cut -d' ' -f1)" = "$SHA256" ] || { echo "The download doesn't match the published app, so nothing was installed."; exit 1; }
 ditto -x -k "$TMP/snow.zip" "$TMP"
 [ -d "$TMP/$NAME.app" ] || { echo "The download didn't contain the app. Try again in a minute."; exit 1; }
 

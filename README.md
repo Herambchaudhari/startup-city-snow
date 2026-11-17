@@ -11,7 +11,7 @@ light follows your clock from dawn to late night.
 2. Paste this line and press Return:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OWNER/startup-city-snow/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Herambchaudhari/startup-city-snow/main/install.sh | bash
 ```
 
 3. Wait about a minute for the download (about 180 MB). The town appears behind your desktop, and ❄ sits in the menu bar.
