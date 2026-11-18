@@ -23,9 +23,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Apple Silicon (macOS 14, 15) and Intel (macOS 15). GitHub no longer has macOS 13 runners, so macOS 13 itself
+        # Apple Silicon (macOS 15, 26) and Intel (macOS 15). GitHub no longer has macOS 13 or 14 runners, so macOS 13 itself
         # is only covered by the app's deployment target (checked below on the installed binary).
-        os: [macos-14, macos-15, macos-15-intel]
+        os: [macos-15, macos-26, macos-15-intel]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     env:
@@ -86,7 +86,9 @@ jobs:
 
       - name: Uninstall line from the README
         run: |
-          LINE="$(grep -o 'pkill -x StartupCitySnow; rm -rf [^`]*' README.md | head -1)"
+          # the README of THIS commit (the job doesn't check out the repo: it installs the way a friend does)
+          LINE="$(curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/README.md" | grep -o 'pkill -x StartupCitySnow; rm -rf [^`]*' | head -1)"
+          test -n "$LINE"
           echo "$LINE"; bash -c "$LINE" || true
           sleep 1
           test ! -e "$APP"
