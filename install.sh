@@ -25,11 +25,21 @@ ditto -x -k "$TMP/snow.zip" "$TMP"
 [ -d "$TMP/$NAME.app" ] || { echo "The download didn't contain the app. Try again in a minute."; exit 1; }
 
 DEST="${SNOW_DEST:-/Applications}"; mkdir -p "$DEST" 2>/dev/null; [ -w "$DEST" ] || DEST="$HOME/Applications"; mkdir -p "$DEST"   # SNOW_DEST: tools/ci tests
+# an older copy that's running quits first (and is really gone before its files are replaced)
 pkill -x StartupCitySnow 2>/dev/null || true
+for i in $(seq 1 50); do pgrep -x StartupCitySnow >/dev/null || break; sleep 0.1; done
 rm -rf "$DEST/$NAME.app"
 ditto "$TMP/$NAME.app" "$DEST/$NAME.app"
 xattr -dr com.apple.quarantine "$DEST/$NAME.app" 2>/dev/null || true
-open "$DEST/$NAME.app"
+# tell Launch Services about the new copy, then open it; a Mac that's still settling gets two more tries
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "$DEST/$NAME.app" 2>/dev/null || true
+started=0
+for i in 1 2 3; do
+  open "$DEST/$NAME.app" 2>/dev/null || true
+  for j in $(seq 1 30); do pgrep -x StartupCitySnow >/dev/null && { started=1; break; }; sleep 0.2; done
+  [ "$started" = 1 ] && break
+done
+[ "$started" = 1 ] || { echo "❄  Installed in $DEST, but it didn't start by itself: open \"$NAME\" from there."; exit 1; }
 
 echo "❄  Done. The snowy town is now your wallpaper."
 echo "   Click ❄ in the menu bar for the time of day, pause, and Start at login."

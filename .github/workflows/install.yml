@@ -80,9 +80,17 @@ jobs:
       - name: Re-install over the first copy
         run: |
           set -o pipefail
-          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh" | bash
+          ok=1
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh" | bash > reinstall.log 2>&1 || ok=0
           for i in $(seq 1 60); do pgrep -x StartupCitySnow && break; sleep 0.5; done
-          pgrep -x StartupCitySnow
+          pgrep -x StartupCitySnow || ok=0
+          cat reinstall.log
+          if [ "$ok" = 0 ]; then
+            # job logs need a GitHub login to read; annotations don't, so the reason shows on the run's page for anyone
+            why="$(tail -c 600 reinstall.log | tr '\n' ' ') | app: $(ls "$APP/Contents/MacOS" 2>&1 | tr '\n' ' ') | crash: $(ls ~/Library/Logs/DiagnosticReports 2>/dev/null | grep -i snow | tr '\n' ' ')"
+            echo "::error title=Re-install::$why"
+            exit 1
+          fi
 
       - name: Uninstall line from the README
         run: |
