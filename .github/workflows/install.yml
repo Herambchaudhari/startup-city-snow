@@ -1,0 +1,104 @@
+# Runs the real one-line install on clean macOS machines and checks the app opens, keeps running and plays its film.
+# Prepared by the Mac app's CI (tools/ci.sh in the app's source).
+#
+# Every push to main, every pull request that touches the app or the installer, once a week (GitHub's raw file
+# service or a macOS image can change under us), and by hand (Actions → Install test → Run workflow).
+name: Install test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths: ["install.sh", "app/**", ".github/workflows/install.yml"]
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: install on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Apple Silicon (macOS 14, 15) and Intel (macOS 15). GitHub no longer has macOS 13 runners, so macOS 13 itself
+        # is only covered by the app's deployment target (checked below on the installed binary).
+        os: [macos-14, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      # the pieces of THIS commit (raw.githubusercontent.com caches main for a few minutes after a push); the
+      # installer also reads them from main when it predates SNOW_BASE
+      SNOW_BASE: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/app
+      APP: /Applications/Startup City Snow.app
+      CACHE: ~/Library/Caches/com.startupcity.snow
+    steps:
+      - name: The Mac
+        run: |
+          sw_vers; uname -m; sysctl -n machdep.cpu.brand_string
+          system_profiler SPDisplaysDataType | grep -E "Chipset|Resolution" || true
+
+      - name: Install exactly like a friend does (curl … | bash)
+        run: |
+          set -o pipefail
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh" | bash 2>&1 | tee install.log
+          grep -q "Done" install.log
+
+      - name: The app is in place, universal, macOS 13+, signed, not quarantined
+        run: |
+          BIN="$APP/Contents/MacOS/StartupCitySnow"
+          test -x "$BIN"
+          test "$(lipo -archs "$BIN")" = "x86_64 arm64"
+          test "$(vtool -show-build "$BIN" | awk '/minos/ {print $2}' | sort -u)" = "13.0"
+          codesign --verify --deep --strict "$APP"
+          ! xattr -r "$APP" | grep -q quarantine
+
+      - name: It opens and keeps running
+        run: |
+          for i in $(seq 1 60); do pgrep -x StartupCitySnow && break; sleep 0.5; done
+          pgrep -x StartupCitySnow
+          sleep 20
+          pgrep -x StartupCitySnow || { echo "the app quit or crashed"; exit 1; }
+
+      - name: It answers and plays its film
+        run: |
+          snap() { swift -e 'import Foundation; DistributedNotificationCenter.default().postNotificationName(.init("com.startupcity.snow.snapshot"), object: nil, userInfo: nil, deliverImmediately: true)'; sleep 2; }
+          snap
+          C=$(eval echo "$CACHE")
+          cat "$C/app.json"
+          jq -e '.mode == "film" or .mode == "live"' "$C/app.json"
+          # a CI machine's screen may count as covered or idle; the app only has to have a film loaded and a menu
+          jq -e '.film != "-" or .mode == "live"' "$C/app.json"
+          jq -e '[.[].title] | index("Quit Startup City Snow")' "$C/menu.json"
+
+      - name: No crash reports
+        run: |
+          ! ls ~/Library/Logs/DiagnosticReports/StartupCitySnow* 2>/dev/null
+
+      - name: Re-install over the first copy
+        run: |
+          set -o pipefail
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh" | bash
+          for i in $(seq 1 60); do pgrep -x StartupCitySnow && break; sleep 0.5; done
+          pgrep -x StartupCitySnow
+
+      - name: Uninstall line from the README
+        run: |
+          LINE="$(grep -o 'pkill -x StartupCitySnow; rm -rf [^`]*' README.md | head -1)"
+          echo "$LINE"; bash -c "$LINE" || true
+          sleep 1
+          test ! -e "$APP"
+          ! pgrep -x StartupCitySnow
+
+      - name: Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: install-${{ matrix.os }}
+          path: |
+            install.log
+            ~/Library/Caches/com.startupcity.snow/*.json
+            ~/Library/Logs/DiagnosticReports/StartupCitySnow*
+          if-no-files-found: ignore
