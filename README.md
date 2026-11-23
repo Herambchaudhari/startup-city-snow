@@ -28,6 +28,12 @@ pick one), clear or rainy days, falling leaves in fall, snow in winter, and the 
 time you open a part of the day, its film (about 23 MB) downloads in the background while a picture of it shows; after
 that it plays straight away, even offline.
 
+## Frames itself around your desktop
+
+The picture shifts and zooms a touch so the scene's centrepiece (the town's tree, Columbia's Alma Mater and library)
+stays clear of your widgets and desktop icons. Move a widget and it glides to the new spot a moment later. Turn it off
+with ❄ → **Frame around my desktop**.
+
 ## Light on your Mac
 
 The town is a pre-recorded film, played the way macOS plays its own moving wallpapers. It pauses when your windows
