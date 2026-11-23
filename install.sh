@@ -7,15 +7,15 @@
 set -euo pipefail
 REPO="${SNOW_REPO:-Herambchaudhari/startup-city-snow}"
 BASE="${SNOW_BASE:-https://raw.githubusercontent.com/$REPO/main/app}/StartupCitySnow.zip.part-"   # SNOW_BASE: tools/ci tests
-PARTS="aa ab ac"
+PARTS="aa"
 # the download's fingerprint: if the file was damaged or swapped, nothing is installed (update it with each release)
-SHA256="5f7b1d61d74f460b1c74c683fe5c5891d89bf5ea38244ae7aa37bb7400767368"
+SHA256="4d8ba8da2bedc62120e31fadd32587de4c414d29417b77095ef3c4c6c3ee0d75"
 NAME="Startup City Snow"
 
 [ "$(uname)" = "Darwin" ] || { echo "Startup City Snow is a Mac app."; exit 1; }
 [ "$(sw_vers -productVersion | cut -d. -f1)" -ge 13 ] || { echo "Startup City Snow needs macOS 13 (Ventura) or newer."; exit 1; }
 
-echo "❄  Downloading Startup City Snow (about 190 MB)…"
+echo "❄  Downloading Startup City Snow (about 30 MB)…"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 offline() { echo "Couldn't download Startup City Snow. Check your internet connection and run the line again."; exit 1; }
 if [ -n "${SNOW_URL:-}" ]; then curl -fL --retry 3 --progress-bar "$SNOW_URL" -o "$TMP/snow.zip" || offline   # testing: one local zip

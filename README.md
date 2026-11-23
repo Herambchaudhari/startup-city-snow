@@ -1,7 +1,7 @@
 # ❄ Startup City Snow
 
-A snowy 3D town as your Mac wallpaper. It snows, the lamps glow, people walk the street, cars drive past, and the
-light follows your clock from dawn to late night.
+Columbia's campus as your Mac wallpaper, living through the day: the light follows your clock, the seasons follow the
+date, students cross the lawns, and it rains, snows or drops its leaves. A snowy Christmas town comes with it too.
 
 ![Startup City Snow](preview.jpg)
 
@@ -14,32 +14,40 @@ light follows your clock from dawn to late night.
 curl -fsSL https://raw.githubusercontent.com/Herambchaudhari/startup-city-snow/main/install.sh | bash
 ```
 
-3. Wait a few minutes for the download (about 190 MB). The town appears behind your desktop, and ❄ sits in the menu bar.
-
-Click ❄ in the menu bar for the time of day, Pause, and **Start at login**. Snow also settles on top of your windows and desktop widgets and falls off when you move one; turn it off with
-**Snow on windows** in the same menu.
+3. That's it: a small download (about 30 MB), then Columbia appears behind your desktop and ❄ sits in the menu bar.
+   It starts with your Mac from now on (turn that off in ❄ → Settings).
 
 **Needs:** a Mac with macOS 13 (Ventura) or newer. Apple Silicon or Intel.
 
-## Columbia
+## The ❄ menu
 
-Click ❄ → **Place** → **Columbia** for Columbia's campus instead of the town: all four seasons (it follows the date, or
-pick one), clear or rainy days, falling leaves in fall, snow in winter, and the light following your clock. The first
-time you open a part of the day, its film (about 23 MB) downloads in the background while a picture of it shows; after
-that it plays straight away, even offline.
+- **Place:** Columbia, or the Snow town.
+- **Season** and **Weather** (Columbia): it follows the date, or pick one; clear or rainy, leaves in fall, snow in winter.
+- **Time of day:** follows your clock, or pick morning, afternoon, dusk or night.
+- **Pause**, and **Settings**: frame around my desktop, snow on windows, start at login, the films on your Mac, the
+  version, updates and uninstall.
+
+Each scene is a film recorded at full quality (4K on Retina and 4K screens). The first time you open one, it downloads
+in the background while a picture of it shows; after that it plays straight away, even offline. The first line of the
+menu always says what it's doing, or why it's resting.
 
 ## Frames itself around your desktop
 
-The picture shifts and zooms a touch so the scene's centrepiece (the town's tree, Columbia's Alma Mater and library)
-stays clear of your widgets and desktop icons. Move a widget and it glides to the new spot a moment later. Turn it off
-with ❄ → **Frame around my desktop**.
+The picture shifts and zooms a touch so the scene's centrepiece (Alma Mater and the library; the town's tree) stays
+clear of your widgets and desktop icons. Move a widget and it glides to the new spot a moment later.
 
 ## Light on your Mac
 
-The town is a pre-recorded film, played the way macOS plays its own moving wallpapers. It pauses when your windows
-cover the screen, when the screen is locked or asleep, in Low Power Mode, and after 5 minutes without input.
+The scene is a film, played the way macOS plays its own moving wallpapers. It rests when your windows cover the
+screen, when the screen is locked or asleep, in Low Power Mode, and after 5 minutes without input.
+
+## Updates
+
+❄ → Settings → **Check for updates…** (it also looks once a day and offers a new version at the top of the menu).
 
 ## Uninstall
+
+❄ → Settings → **Uninstall Startup City Snow…**, or in Terminal:
 
 ```bash
 pkill -x StartupCitySnow; rm -rf "/Applications/Startup City Snow.app" ~/Applications/"Startup City Snow.app" ~/Library/LaunchAgents/com.startupcity.snow.plist ~/Library/Caches/com.startupcity.snow
