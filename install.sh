@@ -9,7 +9,7 @@ REPO="${SNOW_REPO:-Herambchaudhari/startup-city-snow}"
 BASE="${SNOW_BASE:-https://raw.githubusercontent.com/$REPO/main/app}/StartupCitySnow.zip.part-"   # SNOW_BASE: tools/ci tests
 PARTS="aa ab ac"
 # the download's fingerprint: if the file was damaged or swapped, nothing is installed (update it with each release)
-SHA256="fa775067896843938478488d27e75cf5759a6ca766ea5a0a9725bc5eb73aad9f"
+SHA256="5f7b1d61d74f460b1c74c683fe5c5891d89bf5ea38244ae7aa37bb7400767368"
 NAME="Startup City Snow"
 
 [ "$(uname)" = "Darwin" ] || { echo "Startup City Snow is a Mac app."; exit 1; }
