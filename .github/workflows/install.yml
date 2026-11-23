@@ -70,7 +70,9 @@ jobs:
           cat "$C/app.json"
           jq -e '.mode == "film" or .mode == "live"' "$C/app.json"
           # a CI machine's screen may count as covered or idle; the app only has to have a film loaded and a menu
-          jq -e '.film != "-" or .mode == "live"' "$C/app.json"
+          # v1.1: opens on Columbia; a film is loaded (or its picture is up while the film downloads)
+          jq -e '.place == "columbia"' "$C/app.json"
+          jq -e '.clip != "-" or (.status | startswith("Getting"))' "$C/app.json"
           jq -e '[.[].title] | index("Quit Startup City Snow")' "$C/menu.json"
 
       - name: No crash reports
