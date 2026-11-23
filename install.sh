@@ -41,5 +41,5 @@ for i in 1 2 3; do
 done
 [ "$started" = 1 ] || { echo "❄  Installed in $DEST, but it didn't start by itself: open \"$NAME\" from there."; exit 1; }
 
-echo "❄  Done. The snowy town is now your wallpaper."
-echo "   Click ❄ in the menu bar for the time of day, pause, and Start at login."
+echo "❄  Done. Columbia is now your wallpaper (the Snow town is in ❄ → Place)."
+echo "   Click ❄ in the menu bar for the season, weather, time of day and Settings."
