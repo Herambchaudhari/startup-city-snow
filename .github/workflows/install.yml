@@ -43,6 +43,8 @@ jobs:
       - name: Install exactly like a friend does (curl … | bash)
         run: |
           set -o pipefail
+          # a test Mac isn't a person: no anonymous usage report from it (the app's Settings → Share anonymous usage)
+          defaults write com.startupcity.snow qaUsageURL off
           curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/install.sh" | bash 2>&1 | tee install.log
           grep -q "Done" install.log
 
