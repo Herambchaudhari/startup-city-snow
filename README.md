@@ -24,8 +24,14 @@ curl -fsSL https://raw.githubusercontent.com/Herambchaudhari/startup-city-snow/m
 - **Place:** Columbia, or the Snow town.
 - **Season** and **Weather** (Columbia): it follows the date, or pick one; clear or rainy, leaves in fall, snow in winter.
 - **Time of day:** follows your clock, or pick morning, afternoon, dusk or night.
-- **Pause**, and **Settings**: frame around my desktop, snow on windows, start at login, the films on your Mac, the
-  version, updates and uninstall.
+- **Zoom:** closer on a spot you pick, with an optional very slow drift.
+- **Pause**, and **Settings**: frame around my desktop, snow on windows, start at login, share anonymous usage, the
+  films on your Mac, the version, updates and uninstall.
+
+**Privacy:** so we know how many people use it, the app sends an anonymous note when it's installed, once a day while
+it runs, and when it's uninstalled: a random id it makes for itself, the app and macOS versions, the chip, and which
+place and zoom are on. No name, email, files or IP address are kept. Switch it off in ❄ → Settings → Share anonymous
+usage.
 
 Each scene is a film recorded at full quality (4K on Retina and 4K screens). The first time you open one, it downloads
 in the background while a picture of it shows; after that it plays straight away, even offline. The first line of the
